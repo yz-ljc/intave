@@ -577,7 +577,7 @@ class BaseSimulator extends Simulator {
 //    movementData.aquaticUpdateInLava = false;
     environment.aquaticUpdateLavaReset();
 
-    if (!user.meta().protocol().newBlockEntityIntersectionLogic()) {
+//    if (!user.meta().protocol().newBlockEntityIntersectionLogic()) {
       int blockPositionStartX = floor(entityBoundingBox.minX + 0.001);
       int blockPositionStartY = floor(entityBoundingBox.minY + 0.001);
       int blockPositionStartZ = floor(entityBoundingBox.minZ + 0.001);
@@ -602,7 +602,7 @@ class BaseSimulator extends Simulator {
           }
         }
       }
-    }
+//    }
 
     if (clientData.protocolVersion() >= VER_1_14 && environment.pose() != Pose.FALL_FLYING) {
       int soulSandModifier = Enchantments.resolveSoulSpeedModifier(player);
