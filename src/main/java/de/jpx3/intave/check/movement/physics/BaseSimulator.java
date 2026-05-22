@@ -47,7 +47,7 @@ class BaseSimulator extends Simulator {
     simulateMotionClamp(user);
   }
 
-  public void updateAquatics(User user, SimulationEnvironment environment) {
+  private void updateAquatics(User user, SimulationEnvironment environment) {
     updateInWater(user);
     updateInLava(user);
     environment.updateEyesInWater();
@@ -420,7 +420,7 @@ class BaseSimulator extends Simulator {
     }
   }
 
-  void applyCollidedMotionsToContext(
+  private void applyCollidedMotionsToContext(
     Player player,
     SimulationEnvironment environment,
     Motion motion,
@@ -440,7 +440,7 @@ class BaseSimulator extends Simulator {
     motion.motionZ = colliderResult.motionZ();
   }
 
-  public void notePossibleFlyingPacket(User user, ColliderResult collisionResult) {
+  void notePossibleFlyingPacket(User user, ColliderResult collisionResult) {
     MovementMetadata movementData = user.meta().movement();
     Motion context = collisionResult.motion();
     if (flyingPacket(user, context.motionX, context.motionY, context.motionZ)) {
@@ -555,10 +555,6 @@ class BaseSimulator extends Simulator {
     double positionX = environment.positionX();
     double positionY = environment.positionY();
     double positionZ = environment.positionZ();
-
-//    int blockCollisionPosX = floor(positionX);
-//    int blockCollisionPosY = floor(positionY - 0.2f);
-//    int blockCollisionPosZ = floor(positionZ);
 
     Material block = environment.collideMaterial();
 

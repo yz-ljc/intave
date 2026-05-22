@@ -116,7 +116,7 @@ public final class DiagnosticsStage extends CommandStage {
     } else {
       sender.sendMessage(ChatColor.GRAY + "Run this command in-game to display client version");
     }
-    String intaveVersion = IntavePlugin.version();
+    String intaveVersion = IntavePlugin.fullVersion();
     String serverVersion = Bukkit.getName() + "@" + Bukkit.getVersion();
     String protocolLibVersion = ProtocolLibrary.getPlugin().getDescription().getVersion();
     sender.sendMessage(ChatColor.GRAY + "Spigot is " + ChatColor.WHITE + serverVersion);
@@ -777,7 +777,7 @@ public final class DiagnosticsStage extends CommandStage {
       PrintStream printStream = new PrintStream(stream);
       printStream.println("Static environment");
       printStream.println(" Time: " + LocalDateTime.now().format(MESSAGE_DATE_FORMATTER));
-      printStream.println(" Intave: " + IntavePlugin.version());
+      printStream.println(" Intave: " + IntavePlugin.fullVersion());
       printStream.println(" ProtocolLib: " + Bukkit.getPluginManager().getPlugin("ProtocolLib").getDescription().getVersion());
       if (Bukkit.getPluginManager().getPlugin("ViaVersion") != null) {
         printStream.println(" ViaVersion: " + Bukkit.getPluginManager().getPlugin("ViaVersion").getDescription().getVersion());

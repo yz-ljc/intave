@@ -10,9 +10,15 @@ plugins {
   id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
+val gitCommitHash by lazy {
+  providers.exec {
+    commandLine("git", "rev-parse", "--short", "HEAD")
+  }.standardOutput.asText.get().trim()
+}
+
 val simpleName = "Intave"
 group = "de.jpx3"
-version = "14.9.3"
+version = "14.9.3+$gitCommitHash"
 description = "Automated cheat detection and prevention"
 
 /*

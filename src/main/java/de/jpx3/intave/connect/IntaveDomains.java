@@ -36,7 +36,7 @@ public final class IntaveDomains {
       URLConnection connection = new URL(url).openConnection();
       connection.setConnectTimeout(1600);
       connection.setReadTimeout(1600);
-      connection.setRequestProperty("User-Agent", "Intave/" + IntavePlugin.version());
+      connection.setRequestProperty("User-Agent", "Intave/" + IntavePlugin.fullVersion());
       connection.connect();
       Scanner scanner = new Scanner(connection.getInputStream());
       String response = scanner.nextLine();
