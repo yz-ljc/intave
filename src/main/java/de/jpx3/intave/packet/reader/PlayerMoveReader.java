@@ -10,7 +10,6 @@ public final class PlayerMoveReader extends AbstractPacketReader {
 	private final static int HAS_MOVEMENT_FIELD_INDEX = CONTAINS_COLLISION_INFORMATION ? 2 : 1;
 	private final static int HAS_ROTATION_FIELD_INDEX = CONTAINS_COLLISION_INFORMATION ? 3 : 2;
 
-
 	public boolean isVehicleMove() {
 		return packet().getType() == PacketType.Play.Client.VEHICLE_MOVE;
 	}

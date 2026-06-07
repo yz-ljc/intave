@@ -3,6 +3,7 @@ package de.jpx3.intave.test;
 import com.comphenix.protocol.utility.ByteBuddyGenerated;
 import com.google.common.collect.ImmutableList;
 import de.jpx3.intave.IntavePlugin;
+import de.jpx3.intave.adapter.MinecraftVersions;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.ByteCodeElement;
 import net.bytebuddy.description.modifier.ModifierContributor;
@@ -76,7 +77,7 @@ public final class FakePlayerFactory {
         case "getLocation":
           return new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
         case "getHealth":
-          return 20.0;
+          return MinecraftVersions.VER1_9_0.atOrAbove() ? 20.0 : 20.0f;
         case "getFoodLevel":
           return 20;
         case "isFlying":

@@ -14,7 +14,6 @@ import de.jpx3.intave.share.Motion;
 import de.jpx3.intave.share.Position;
 import de.jpx3.intave.test.FakePlayerFactory;
 import de.jpx3.intave.test.FakeWorldFactory;
-import de.jpx3.intave.test.MockEmptyInventory;
 import de.jpx3.intave.user.User;
 import de.jpx3.intave.user.UserFactory;
 import de.jpx3.intave.user.UserRepository;
@@ -24,7 +23,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.PlayerInventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,11 +36,9 @@ public final class ExamplePhysicsTest {
 
 	private User testUser;
 	private Player player;
-
 	private final Collider collider = Colliders.anyCollider();
 	private final FluidFlow waterflow = Fluids.anyWaterflow();
 	private final SimpleCollider simpleCollider = Colliders.anySimpleCollider();
-	private final PlayerInventory inventory = new MockEmptyInventory();
 
 	@BeforeEach
 	void setUp() {

@@ -11,21 +11,21 @@ import static com.comphenix.protocol.PacketType.Play.Server.CHAT;
 import static com.comphenix.protocol.PacketType.Play.Server.SET_ACTION_BAR_TEXT;
 
 public final class ActionBar {
-  private static final boolean TYPE_AS_GAME_INFO = MinecraftVersions.VER1_12_0.atOrAbove();
-  private static final boolean DEDICATED_ACTION_BAR_PACKET = MinecraftVersions.VER1_17_0.atOrAbove();
+	private static final boolean TYPE_AS_GAME_INFO = MinecraftVersions.VER1_12_0.atOrAbove();
+	private static final boolean DEDICATED_ACTION_BAR_PACKET = MinecraftVersions.VER1_17_0.atOrAbove();
 
-  public static void sendActionBar(Player player, String message) {
-    PacketContainer packet = new PacketContainer(DEDICATED_ACTION_BAR_PACKET ? SET_ACTION_BAR_TEXT : CHAT);
-    packet.getChatComponents().write(0, WrappedChatComponent.fromText(message));
+	public static void sendActionBar(Player player, String message) {
+		PacketContainer packet = new PacketContainer(DEDICATED_ACTION_BAR_PACKET ? SET_ACTION_BAR_TEXT : CHAT);
+		packet.getChatComponents().write(0, WrappedChatComponent.fromText(message));
 
-    if (!DEDICATED_ACTION_BAR_PACKET) {
-      if (TYPE_AS_GAME_INFO) {
-        packet.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
-      } else {
-        packet.getBytes().write(0, (byte) 2);
-      }
-    }
+		if (!DEDICATED_ACTION_BAR_PACKET) {
+			if (TYPE_AS_GAME_INFO) {
+				packet.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
+			} else {
+				packet.getBytes().write(0, (byte) 2);
+			}
+		}
 
-    PacketSender.sendServerPacketWithoutEvent(player, packet);
-  }
+		PacketSender.sendServerPacketWithoutEvent(player, packet);
+	}
 }
