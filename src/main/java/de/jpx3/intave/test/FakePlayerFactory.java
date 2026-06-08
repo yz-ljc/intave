@@ -136,6 +136,8 @@ public final class FakePlayerFactory {
         .defineConstructor(new ModifierContributor.ForMethod[]{Visibility.PUBLIC})
         .withParameters(new Type[]{Server.class})
         .intercept(MethodCall.invoke(FakePlayer.class.getDeclaredConstructor()).andThen(FieldAccessor.ofField("server").setsArgumentAt(0)))
+        .defineMethod("getHealth", double.class, Visibility.PUBLIC)
+        .intercept(implementation)
         .method(callbackFilter)
         .intercept(implementation)
         .make()
