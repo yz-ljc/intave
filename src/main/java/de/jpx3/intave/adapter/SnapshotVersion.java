@@ -67,6 +67,7 @@ public final class SnapshotVersion implements Comparable<SnapshotVersion> {
 		return Integer.compare(this.snapshotWeekVersion, o.getSnapshotWeekVersion());
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
@@ -78,10 +79,12 @@ public final class SnapshotVersion implements Comparable<SnapshotVersion> {
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		return Objects.hash(this.snapshotDate, this.snapshotWeekVersion);
 	}
 
+	@Override
 	public String toString() {
 		return this.getSnapshotString();
 	}

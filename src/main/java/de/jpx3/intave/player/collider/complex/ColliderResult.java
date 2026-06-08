@@ -94,7 +94,9 @@ public final class ColliderResult {
   public void applyTo(
     SimulationEnvironment environment
   ) {
-
+    if (environment == null) {
+      throw new IllegalArgumentException("Environment cannot be null");
+    }
   }
 
   public void debugAttach(String key, double value) {

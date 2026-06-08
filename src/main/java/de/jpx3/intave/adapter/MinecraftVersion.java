@@ -106,7 +106,11 @@ public final class MinecraftVersion implements Comparable<MinecraftVersion> {
 			throw new IllegalStateException("Corrupt MC version: " + version);
 		} else {
 			for (int i = 0; i < Math.min(numbers.length, elements.length); ++i) {
-				numbers[i] = Integer.parseInt(elements[i].trim());
+				try {
+					numbers[i] = Integer.parseInt(elements[i].trim());
+				} catch (NumberFormatException e) {
+					throw new IllegalStateException("Corrupt MC version: " + version, e);
+				}
 			}
 
 			return numbers;
@@ -149,6 +153,7 @@ public final class MinecraftVersion implements Comparable<MinecraftVersion> {
 		return this.getDevelopmentStage() == null ? String.format("%s.%s.%s", this.getMajor(), this.getMinor(), this.getBuild()) : String.format("%s.%s.%s-%s%s", this.getMajor(), this.getMinor(), this.getBuild(), this.getDevelopmentStage(), this.isSnapshot() ? this.snapshot : "");
 	}
 
+	@Override
 	public int compareTo(MinecraftVersion o) {
 		if (o == null) {
 			return 1;
@@ -193,6 +198,7 @@ public final class MinecraftVersion implements Comparable<MinecraftVersion> {
 		}
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
 			return false;
@@ -206,10 +212,12 @@ public final class MinecraftVersion implements Comparable<MinecraftVersion> {
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		return Objects.hash(new Object[]{this.getMajor(), this.getMinor(), this.getBuild()});
 	}
 
+	@Override
 	public String toString() {
 		return String.format("(MC: %s)", this.getVersion());
 	}

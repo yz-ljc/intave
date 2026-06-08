@@ -98,8 +98,7 @@ public final class ExamplePhysicsTest {
 	}
 
 	@Test
-	public void testy() {
-		Simulator simulator = Simulators.PLAYER;
+	public void playerDoesNotFallThroughPlatform() {
 		MovementMetadata metadata = testUser.meta().movement();
 		metadata.sneaking = false;
 		MovementConfiguration config = MovementConfiguration.blank().pressingW();

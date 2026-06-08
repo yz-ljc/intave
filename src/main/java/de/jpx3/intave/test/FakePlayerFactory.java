@@ -75,7 +75,9 @@ public final class FakePlayerFactory {
     methods.add((methodName, args) -> {
       switch (methodName) {
         case "getLocation":
-          return new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+          return Bukkit.getWorlds().isEmpty()
+            ? new Location(null, 0, 0, 0)
+            : new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
         case "getHealth":
           return MinecraftVersions.VER1_9_0.atOrAbove() ? 20.0 : 20.0f;
         case "getFoodLevel":
