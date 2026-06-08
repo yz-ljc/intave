@@ -216,6 +216,6 @@ public final class MinecraftVersion implements Comparable<MinecraftVersion> {
 
 	static {
 //    LATEST = v26_1;
-		VERSION_PATTERN = Pattern.compile(".*\\(.*MC.\\s*([a-zA-z0-9\\-.]+).*");
+		VERSION_PATTERN = Pattern.compile(".*\\(.*MC.\\s*([a-zA-Z0-9\\-.]+).*");
 	}
 }
