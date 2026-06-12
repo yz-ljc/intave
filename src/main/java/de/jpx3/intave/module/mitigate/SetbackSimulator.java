@@ -310,10 +310,6 @@ public final class SetbackSimulator extends Module {
 
       // velocity
       Vector futureMotion = motionProceed(motion, user, boundingBox, true);
-//      movementData.physicsMotionX = futureMotion.getX();
-//      movementData.physicsMotionY = futureMotion.getY();
-//      movementData.physicsMotionZ = futureMotion.getZ();
-
       movementData.willReceiveSetbackVelocity = true;
       movementData.setbackOverrideVelocity = futureMotion;
       // this is not the real setback motion - velocity will be applied later

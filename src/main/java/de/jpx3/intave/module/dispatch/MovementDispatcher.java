@@ -1047,9 +1047,6 @@ public final class MovementDispatcher extends Module {
       if (movementData.willReceiveSetbackVelocity && motion.length() < 0.001) {
         movementData.willReceiveSetbackVelocity = false;
         motion = Motion.fromVector(movementData.setbackOverrideVelocity);
-//        integers.writeSafely(1, (int) (velocity.getX() * 8000d));
-//        integers.writeSafely(2, (int) (velocity.getY() * 8000d));
-//        integers.writeSafely(3, (int) (velocity.getZ() * 8000d));
         reader.setMotion(motion);
         return;
       }

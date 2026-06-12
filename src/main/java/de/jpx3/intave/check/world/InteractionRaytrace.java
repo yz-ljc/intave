@@ -71,14 +71,12 @@ import static de.jpx3.intave.module.linker.packet.PacketId.Server.BLOCK_BREAK_AN
 import static de.jpx3.intave.module.tracker.player.AbilityTracker.GameMode.CREATIVE;
 
 public final class InteractionRaytrace extends MetaCheck<InteractionRaytrace.InteractionMeta> {
-  private final IntavePlugin plugin;
-  private final CheckViolationLevelDecrementer decrementer;
+	private final CheckViolationLevelDecrementer decrementer;
   private final InteractionEmulator interactionEmulator;
 
   public InteractionRaytrace(IntavePlugin plugin) {
     super("InteractionRaytrace", "interactionraytrace", InteractionMeta.class);
-    this.plugin = plugin;
-    this.decrementer = new CheckViolationLevelDecrementer(this, 1);
+	  this.decrementer = new CheckViolationLevelDecrementer(this, 1);
     this.interactionEmulator = new InteractionEmulator(plugin);
   }
 
