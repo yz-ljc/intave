@@ -11,9 +11,13 @@ plugins {
 }
 
 val gitTag by lazy {
-  providers.exec {
-    commandLine("git", "describe", "--tags", "--abbrev=0")
-  }.standardOutput.asText.get().trim()
+  try {
+    providers.exec {
+      commandLine("git", "describe", "--tags", "--abbrev=0")
+    }.standardOutput.asText.get().trim()
+  } catch (e: Exception) {
+    "dev-snapshot"
+  }
 }
 
 val gitCommitHash by lazy {
