@@ -65,10 +65,10 @@ dependencies {
   compileOnly("org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT")
 
   // bytebuddy
-  implementation("net.bytebuddy:byte-buddy:1.18.2")
+  compileOnly("net.bytebuddy:byte-buddy:1.18.2")
 
   // floodgate
-  implementation("org.geysermc.floodgate:api:2.0-SNAPSHOT")
+  compileOnly("org.geysermc.floodgate:api:2.0-SNAPSHOT")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
