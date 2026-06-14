@@ -29,4 +29,14 @@ final class TypeTranslation {
   public Material typeTo() {
     return typeTo;
   }
+
+  @Override
+  public String toString() {
+    return "TypeTranslation{" +
+      "versionFrom=" + versionFrom +
+      ", versionTo=" + versionTo +
+      ", typeFrom=" + typeFrom +
+      ", typeTo=" + typeTo +
+      '}';
+  }
 }

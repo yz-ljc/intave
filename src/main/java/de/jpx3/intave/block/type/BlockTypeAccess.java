@@ -1,8 +1,7 @@
 package de.jpx3.intave.block.type;
 
-import de.jpx3.intave.adapter.MinecraftVersion;
-import de.jpx3.intave.IntavePlugin;
 import de.jpx3.intave.access.IntaveInternalException;
+import de.jpx3.intave.adapter.MinecraftVersion;
 import de.jpx3.intave.block.access.BlockAccess;
 import de.jpx3.intave.block.access.VolatileBlockAccess;
 import de.jpx3.intave.resource.Resource;
@@ -15,7 +14,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import static de.jpx3.intave.diagnostic.timings.Timings.SERVICE_TYPE_LOOKUP;
 
@@ -47,7 +45,7 @@ public final class BlockTypeAccess {
     throw new IntaveInternalException("Unable to find block for " + Arrays.toString(names));
   }
 
-  private static final Resource MAPPING_RESOURCE = Resources.localServiceCacheResource("bbm/" + IntavePlugin.versionTag(),  "bbm", TimeUnit.DAYS.toMillis(14));
+  private static final Resource MAPPING_RESOURCE = Resources.resourceFromJarOrBuild("bbm.mapping");
   private static final TypeTranslations TYPE_TRANSLATIONS = MAPPING_RESOURCE.collectLines(VerTraFileTypeTranslator.lineCollector());
 
   public static void setupTranslationsFor(User user) {
