@@ -657,7 +657,7 @@ public final class VoxelShape implements BlockShape {
 
 	static VoxelShape fromBoxes(List<? extends BoundingBox> boxes) {
 		if (boxes.isEmpty()) {
-			throw new IllegalArgumentException("Empty shape");
+			return empty();
 		}
 		VoxelShape shape = null;
 		Boolean origin = null;
@@ -716,10 +716,11 @@ public final class VoxelShape implements BlockShape {
 		));
 	}
 
-	public static VoxelShape empty() {
-		return new VoxelShape();
-	}
+	private final static VoxelShape EMPTY = new VoxelShape();
 
+	public static VoxelShape empty() {
+		return EMPTY;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
