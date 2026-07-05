@@ -36,8 +36,9 @@ public class AngleSnap extends PlayerCheckPart<PlacementAnalysis> {
     Player player = event.getPlayer();
     User user = userOf(player);
     MovementMetadata movementData = user.meta().movement();
-    float distanceTo45Deg = Math.min(Math.abs(45 - movementData.rotationYaw % 45), Math.abs(movementData.rotationYaw % 45));
-    float pastDistanceTo45Deg = Math.min(Math.abs(45 - movementData.lastRotationYaw % 45), Math.abs(movementData.lastRotationYaw % 45));
+    float mod45 = ((movementData.rotationYaw  % 45) + 45) % 45;
+    float distanceTo45Deg = Math.min(mod45, 45 - mod45);
+    //float pastDistanceTo45Deg = Math.min(Math.abs(45 - movementData.lastRotationYaw % 45), Math.abs(movementData.lastRotationYaw % 45));
 
     if (distanceTo45Deg < 0.08) {
       // 5th not included
