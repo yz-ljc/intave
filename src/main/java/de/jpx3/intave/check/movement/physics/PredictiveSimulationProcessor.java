@@ -13,6 +13,8 @@ import de.jpx3.intave.user.meta.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
+import static de.jpx3.intave.check.movement.physics.MoveMetric.*;
+
 public final class PredictiveSimulationProcessor implements SimulationProcessor {
 
   /*
@@ -20,12 +22,10 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
    * please refactor
    * */
   private final boolean itemUsageReset;
-  private final boolean useSuperpositions;
   private final boolean detectNoSlowdown;
 
-  public PredictiveSimulationProcessor(boolean itemUsageReset, boolean useSuperpositions, boolean detectNoSlowdown) {
+  public PredictiveSimulationProcessor(boolean itemUsageReset, boolean detectNoSlowdown) {
     this.itemUsageReset = itemUsageReset;
-    this.useSuperpositions = useSuperpositions;
     this.detectNoSlowdown = detectNoSlowdown;
   }
 
@@ -115,14 +115,14 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
     MovementMetadata movementData = meta.movement();
     InventoryMetadata inventoryData = meta.inventory();
     ProtocolMetadata protocol = meta.protocol();
-//    if (movementData.pastPlayerReduceAttackPhysics == 0 && simulationStack.sprinted()/*movementData.sprinting*/ && !simulationStack.reduced()) {
+//    if (movementData.past(PLAYER_REDUCE_ATTACK_PHYSICS) == 0 && simulationStack.sprinted()/*movementData.sprinting*/ && !simulationStack.reduced()) {
 //      movementData.ignoredAttackReduce = true;
 //    }
     /* misplaced - please solve this otherwise */
     boolean movementSuggestsHandIsActive = simulationStack.handActive();
     boolean packetsSuggestsHandIsActive = inventoryData.handActive();
     if (packetsSuggestsHandIsActive && !movementSuggestsHandIsActive) {
-      boolean releaseHandConditions = Hypot.fast(movementData.motionX(), movementData.motionZ()) > 0.3 || movementData.lastTeleport >= 2;
+      boolean releaseHandConditions = Hypot.fast(movementData.motionX(), movementData.motionZ()) > 0.3 || movementData.ticksPast(TELEPORT) >= 2;
       boolean itemIsBow = ItemProperties.isBow(meta.inventory().activeItemType()) || ItemProperties.isBow(meta.inventory().offhandItemType());
       boolean viaVersionBlockReplacement = meta.protocol().viaVersionShieldBlockReplacement();
       if (releaseHandConditions && (!itemIsBow || (inventoryData.handActiveTicks > 3 && !viaVersionBlockReplacement)) && itemUsageReset) {
@@ -134,7 +134,7 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
       }
     }
 
-    boolean canExpectCorrectReduce = !protocol.combatUpdate() && movementData.pastVelocity > 1 && movementData.motion().horizontalLength() > 0.2;
+    boolean canExpectCorrectReduce = !protocol.combatUpdate() && movementData.ticksPast(VELOCITY) > 1 && movementData.motion().horizontalLength() > 0.2;
     boolean invalidReduceTicks = simulationStack.reduceTicks() != movementData.reduceTicks;
     if (canExpectCorrectReduce && invalidReduceTicks) {
       movementData.invalidReduceVL = Math.min(movementData.invalidReduceVL + 1, 10);
@@ -146,7 +146,6 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
     movementData.keyForward = simulationStack.forward();
     movementData.keyStrafe = simulationStack.strafe();
     movementData.physicsJumped = simulationStack.jumped();
-//    movementData.sprintMove = simulationStack.sprinted();
   }
 
   private static final double REQUIRED_PREDICTION_ACCURACY_FOR_PRED_BIAS_PROCEED = 0.1;
@@ -188,7 +187,7 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
       Timings.CHECK_PHYSICS_PROC_PRED_BIA.stop();
       return Simulation.invalid();
     }
-    MovementConfiguration configuration = MovementConfiguration.noAction();
+    MovementConfiguration configuration = MovementConfiguration.blank();
     // keys
     configuration = configuration.withKeypress(forwardKeyFrom(direction), strafeKeyFrom(direction));
     // jump
@@ -244,21 +243,6 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
     return -1;
   }
 
-  private double directionPredictionError(double differenceX, double differenceZ, float yaw) {
-    if (Hypot.fast(differenceX, differenceZ) > 0.001) {
-      double direction;
-      direction = Math.toDegrees(Math.atan2(differenceZ, differenceX)) - 90d;
-      direction -= yaw;
-      direction %= 360d;
-      if (direction < 0)
-        direction += 360;
-      direction = Math.abs(direction);
-      direction /= 45d;
-      return Math.abs(direction - (int) Math.round(direction));
-    }
-    return 0;
-  }
-
   private static final int[] forwardKeys = {1, 1, 0, -1, -1, -1, 0, 1, 1};
   private static final int[] strafeKeys = {0, -1, -1, -1, 0, 1, 1, 1, 0};
 
@@ -287,7 +271,7 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
       Timings.CHECK_PHYSICS_PROC_BIA.stop();
       return Simulation.invalid();
     }
-    MovementConfiguration configuration = MovementConfiguration.noAction();
+    MovementConfiguration configuration = MovementConfiguration.blank();
     // keys
     configuration = configuration.withKeypress(keyForward, keyStrafe);
     // reducing
@@ -313,18 +297,13 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
     if (sprinting && keyForward != 1) {
       configuration = configuration.withoutKeypress();
     } else if (sprinting) {
-      if (movementData.isSneaking() && !configuration.isJumping()) {
-        configuration = configuration.withoutSprinting();
-      } else {
-        configuration = configuration.withSprinting();
-      }
+      configuration = configuration.withSprinting();
     }
     // block inventory move
     if (inventoryData.inventoryOpen()) {
       configuration = configuration.withoutKeypress();
     }
     movementData.physicsJumped = configuration.isJumping();
-//    movementData.sprintMove = configuration.isSprinting();
     movementData.keyForward = configuration.forward();
     movementData.keyStrafe = configuration.strafe();
     movementData.refreshFriction(sprinting);
@@ -364,7 +343,7 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
     ;
 //    boolean requireUseItem = inventoryData.handActive() && inventoryData.pastHotBarSlotChange > 20 && (!protocol.combatUpdate() || inventoryData.heldItemType() != Material.BOW);
 
-    if (requireUseItem && movementData.pastEntityUse <= inventoryData.handActiveTicks) {
+    if (requireUseItem && movementData.ticksPast(ENTITY_USE) <= inventoryData.handActiveTicks) {
       requireUseItem = false;
     }
 
@@ -391,7 +370,7 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
     if (protocol.combatUpdate()) {
       sprintSelector = movementData.sprintingAllowed() || movementData.hasSprintSpeed ? /* surprisingly pessimistic */ PESSIMISTIC : NEVER;
     } else {
-      boolean certain = movementData.pastSprintChange > 1;
+      boolean certain = movementData.ticksPast(SPRINT_CHANGE) > 1;
       sprintSelector = movementData.sprinting ? (certain ? ALWAYS : OPTIMISTIC) : (certain ? NEVER : PESSIMISTIC);
     }
 
@@ -413,7 +392,7 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
           continue;
         }
         IterativeStudy.USE_ITEM_ITERATOR.run();
-        boolean canExpectCorrectReduce = !protocol.combatUpdate() && movementData.pastVelocity > 1 && movementData.motion().horizontalLength() > 0.2;
+        boolean canExpectCorrectReduce = !protocol.combatUpdate() && movementData.ticksPast(VELOCITY) > 1 && movementData.motion().horizontalLength() > 0.2;
         boolean enforceCorrectReduction = movementData.forceCorrectReduce && canExpectCorrectReduce;
         for (int reduceIndex = 0; reduceIndex <= Math.min(movementData.reduceTicks, 3); reduceIndex++) {
 //              if (enforceCorrectReduction && reduceIndex > movementData.reduceTicks) {
@@ -488,7 +467,7 @@ public final class PredictiveSimulationProcessor implements SimulationProcessor 
       simulateAndAppend(
         user, simulator,
         simulationStack,
-        MovementConfiguration.noAction(),
+        MovementConfiguration.blank(),
         true
       );
     }
